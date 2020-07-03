@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mrkj.ygl.dao.questionnaire.QuestionnaireMainUserMapper" >
+  <resultMap id="BaseResultMap" type="com.mrkj.ygl.entity.questionnaire.QuestionnaireMainUser" >
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="main_id" property="mainId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, main_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_main_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByMainIDUserId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_main_user
+    where user_id = #{userId,jdbcType=VARCHAR} and main_id = #{mainId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from questionnaire_main_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMainUser" >
+    insert into questionnaire_main_user (user_id, main_id)
+    values (#{userId,jdbcType=VARCHAR}, #{mainId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMainUser" >
+    insert into questionnaire_main_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="mainId != null" >
+        main_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="mainId != null" >
+        #{mainId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMainUser" >
+    update questionnaire_main_user
+    <set >
+      <if test="mainId != null" >
+        main_id = #{mainId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMainUser" >
+    update questionnaire_main_user
+    set main_id = #{mainId,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>

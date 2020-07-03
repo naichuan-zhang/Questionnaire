@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mrkj.ygl.dao.questionnaire.QuestionnaireQuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.mrkj.ygl.entity.questionnaire.QuestionnaireQuestion" >
+    <id column="question_id" property="questionId" jdbcType="VARCHAR" />
+    <result column="question_title" property="questionTitle" jdbcType="VARCHAR" />
+    <result column="main_id" property="mainId" jdbcType="VARCHAR" />
+    <result column="question_destype" property="questionDestype" jdbcType="VARCHAR" />
+    <result column="question_type" property="questionType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    question_id, question_title, main_id, question_destype, question_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_question
+    where question_id = #{questionId,jdbcType=VARCHAR}
+    order by question_creat
+  </select>
+  <select id="selectByMainId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_question
+    where main_id = #{mainId,jdbcType=VARCHAR}
+    order by question_creat
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from questionnaire_question
+    where question_id = #{questionId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireQuestion" >
+    insert into questionnaire_question (question_id, question_title, main_id, question_destype, question_type, question_creat
+      )
+    values (#{questionId,jdbcType=VARCHAR}, #{questionTitle,jdbcType=VARCHAR}, #{mainId,jdbcType=VARCHAR},  #{questionDestype,jdbcType=VARCHAR}, #{questionType,jdbcType=VARCHAR}, now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireQuestion" >
+    insert into questionnaire_question
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="questionId != null" >
+        question_id,
+      </if>
+      <if test="questionTitle != null" >
+        question_title,
+      </if>
+      <if test="mainId != null" >
+        main_id,
+      </if>
+      <if test="questionDestype != null" >
+        question_destype,
+      </if>
+      <if test="questionType != null" >
+        question_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="questionId != null" >
+        #{questionId,jdbcType=VARCHAR},
+      </if>
+      <if test="questionTitle != null" >
+        #{questionTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mainId != null" >
+        #{mainId,jdbcType=VARCHAR},
+      </if>
+      <if test="questionDestype != null" >
+        #{questionDestype,jdbcType=VARCHAR},
+      </if>
+      <if test="questionType != null" >
+        #{questionType,jdbcType=VARCHAR},
+      </if>
+      now ()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireQuestion" >
+    update questionnaire_question
+    <set >
+      <if test="questionTitle != null" >
+        question_title = #{questionTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="questionDestype != null" >
+        question_destype = #{questionDestype,jdbcType=VARCHAR},
+      </if>
+      <if test="questionType != null" >
+        question_type = #{questionType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where question_id = #{questionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireQuestion" >
+    update questionnaire_question
+    set question_title = #{questionTitle,jdbcType=VARCHAR},
+      main_id = #{mainId,jdbcType=VARCHAR}
+    where question_id = #{questionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

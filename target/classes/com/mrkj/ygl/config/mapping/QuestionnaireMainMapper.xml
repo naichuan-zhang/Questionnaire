@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mrkj.ygl.dao.questionnaire.QuestionnaireMainMapper" >
+  <resultMap id="BaseResultMap" type="com.mrkj.ygl.entity.questionnaire.QuestionnaireMain" >
+    <id column="main_id" property="mainId" jdbcType="VARCHAR" />
+    <result column="main_title" property="mainTitle" jdbcType="VARCHAR" />
+    <result column="main_creat" property="mainCreat" jdbcType="TIMESTAMP" />
+    <result column="main_isuse" property="mainIsuse" jdbcType="CHAR" />
+    <result column="main_endtime" property="mainEndtime" jdbcType="DATE" />
+    <result column="main_creatuser" property="mainCreatuser" jdbcType="VARCHAR" />
+    <result column="main_creatdep" property="mainCreatdep" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap type="java.util.Map" id="CountMap">
+  	<result column="count(main_id)" property="count" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    main_id, main_title, main_creat, main_isuse, main_endtime, main_creatuser,main_creatdep
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_main
+    where main_id = #{mainId,jdbcType=VARCHAR}
+    order by main_creat
+  </select>
+    <!-- 根据main_isuse查找为y  -->
+  <select id="selectByMainIsuse" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_main
+    where main_isuse = 'y'
+  </select>
+    <!-- 查询总数  -->
+  <select id="selectCount" resultMap="CountMap" parameterType="java.util.Map">
+    select
+    	count(main_id)
+    from questionnaire_main
+    <where >
+      <if test="mainId != null" >
+        main_id LIKE CONCAT(CONCAT('%', #{mainId,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainTitle != null" >
+        and main_title LIKE CONCAT(CONCAT('%', #{mainTitle,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainCreat != null" >
+        and main_creat LIKE CONCAT(CONCAT('%', #{mainCreat,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainEndtime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_endtime &gt;= NOW()
+      </if>
+      <if test="mainIsuse != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_isuse = 'y'
+      </if>
+      <if test="mainStartTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainCreat,jdbcType=DATE} &gt;= main_creat
+      </if>
+      <if test="mainOverTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainOverTime,jdbcType=DATE} &lt;= main_creat
+      </if>
+      <if test="mainCreatuser != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_creatuser = #{mainCreatuser,jdbcType=DATE} 
+      </if>
+    </where>
+  </select>
+  <!-- 分页查询  前台后台通用 如果前台请求传递 mainEndtime 参数即可，参数的值无所谓。 -->
+  <select id="selectPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_main
+    <where >
+      <if test="mainId != null" >
+        main_id LIKE CONCAT(CONCAT('%', #{mainId,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainTitle != null" >
+        and main_title LIKE CONCAT(CONCAT('%', #{mainTitle,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainCreat != null" >
+        and main_creat LIKE CONCAT(CONCAT('%', #{mainCreat,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainEndtime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_endtime &gt;= NOW()
+      </if>
+      <if test="mainIsuse != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_isuse = 'y'
+      </if>
+      <if test="mainStartTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainCreat,jdbcType=DATE} &gt;= main_creat
+      </if>
+      <if test="mainOverTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainOverTime,jdbcType=DATE} &lt;= main_creat
+      </if>
+      <if test="mainCreatuser != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_creatuser = #{mainCreatuser,jdbcType=DATE} 
+      </if>
+    </where>
+     order by main_creat desc
+     limit #{page,jdbcType=INTEGER},#{row,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from questionnaire_main
+    where main_id = #{mainId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="delCheck">
+    delete from questionnaire_main 
+    where main_id in 
+	<foreach item="mainIds" index="index" collection="array" open="(" separator="," close=")">
+		#{mainIds}
+	</foreach>
+  </delete>
+  <insert id="insert" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMain" >
+    insert into questionnaire_main (main_id, main_title, main_creat, 
+      main_isuse,main_endtime,main_creatuser)
+    values (#{mainId,jdbcType=VARCHAR}, #{mainTitle,jdbcType=VARCHAR}, #{mainCreat,jdbcType=TIMESTAMP}, 
+      #{mainIsuse,jdbcType=CHAR}), #{mainEndtime,jdbcType=DATE}, #{mainCreatuser,jdbcType=VARCHAR}
+  </insert>
+  <insert id="insertSelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMain" >
+    insert into questionnaire_main
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mainId != null" >
+        main_id,
+      </if>
+      <if test="mainTitle != null" >
+        main_title,
+      </if>
+      <if test="mainCreat != null" >
+        main_creat,
+      </if>
+      <if test="mainIsuse != null" >
+        main_isuse,
+      </if>
+      <if test="mainEndtime != null" >
+        main_endtime,
+      </if>
+      <if test="mainCreatuser != null" >
+        main_creatuser,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mainId != null" >
+        #{mainId,jdbcType=VARCHAR},
+      </if>
+      <if test="mainTitle != null" >
+        #{mainTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mainCreat != null" >
+        #{mainCreat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mainIsuse != null" >
+        #{mainIsuse,jdbcType=CHAR},
+      </if>
+      <if test="mainEndtime != null" >
+        #{mainEndtime,jdbcType=DATE},
+      </if>
+      <if test="mainCreatuser != null" >
+        #{mainCreatuser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMain" >
+    update questionnaire_main
+    <set >
+      <if test="mainTitle != null" >
+        main_title = #{mainTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mainCreat != null" >
+        main_creat = #{mainCreat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mainIsuse != null" >
+        main_isuse = #{mainIsuse,jdbcType=CHAR},
+      </if>
+      <if test="mainEndtime != null" >
+        main_endtime = #{mainEndtime,jdbcType=CHAR},
+      </if>
+    </set>
+    where main_id = #{mainId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireMain" >
+    update questionnaire_main
+    set main_title = #{mainTitle,jdbcType=VARCHAR},
+      main_creat = #{mainCreat,jdbcType=TIMESTAMP},
+      main_isuse = #{mainIsuse,jdbcType=CHAR}
+    where main_id = #{mainId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateMainIsuseN" >
+    update questionnaire_main
+    set 
+      main_isuse = 'n'
+  </update>
+  <update id="updateMainCreat" parameterType="java.lang.String" >
+    update questionnaire_main
+    set 
+      main_creatdep = main_creatdep+1
+    where
+      main_id = #{mainId,jdbcType=VARCHAR}
+  </update>
+</mapper>

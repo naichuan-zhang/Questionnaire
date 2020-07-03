@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mrkj.ygl.dao.questionnaire.QuestionnaireAnswerMapper" >
+  <resultMap id="BaseResultMap" type="com.mrkj.ygl.entity.questionnaire.QuestionnaireAnswer" >
+    <id column="answer_id" property="answerId" jdbcType="VARCHAR" />
+    <result column="answer_value" property="answerValue" jdbcType="INTEGER" />
+    <result column="answer_type" property="answerType" jdbcType="VARCHAR" />
+    <result column="answer_destype" property="answerDestype" jdbcType="VARCHAR" />
+    <result column="answer_text" property="answerText" jdbcType="VARCHAR" />
+    <result column="question_id" property="questionId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    answer_id, answer_value, answer_type, answer_destype, answer_text, question_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_answer
+    where answer_id = #{answerId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByQuestionId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_answer
+    where question_id in
+    <foreach item="questionIds" index="index" collection="array" open="(" separator="," close=")">
+		#{questionIds}
+	</foreach>
+	ORDER BY answer_creat
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from questionnaire_answer
+    where answer_id = #{answerId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByQuestionId" parameterType="java.lang.String" >
+    delete from questionnaire_answer
+    where question_id = #{questionId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireAnswer" >
+    insert into questionnaire_answer (answer_id, answer_value, answer_type, 
+      answer_destype, answer_text, question_id, answer_creat
+      )
+    values (#{answerId,jdbcType=VARCHAR}, #{answerValue,jdbcType=INTEGER}, #{answerType,jdbcType=VARCHAR}, 
+      #{answerDestype,jdbcType=VARCHAR}, #{answerText,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireAnswer" >
+    insert into questionnaire_answer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="answerId != null" >
+        answer_id,
+      </if>
+      <if test="answerValue != null" >
+        answer_value,
+      </if>
+      <if test="answerType != null" >
+        answer_type,
+      </if>
+      <if test="answerDestype != null" >
+        answer_destype,
+      </if>
+      <if test="answerText != null" >
+        answer_text,
+      </if>
+      <if test="questionId != null" >
+        question_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="answerId != null" >
+        #{answerId,jdbcType=VARCHAR},
+      </if>
+      <if test="answerValue != null" >
+        #{answerValue,jdbcType=INTEGER},
+      </if>
+      <if test="answerType != null" >
+        #{answerType,jdbcType=VARCHAR},
+      </if>
+      <if test="answerDestype != null" >
+        #{answerDestype,jdbcType=VARCHAR},
+      </if>
+      <if test="answerText != null" >
+        #{answerText,jdbcType=VARCHAR},
+      </if>
+      <if test="questionId != null" >
+        #{questionId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireAnswer" >
+    update questionnaire_answer
+    <set >
+      <if test="answerValue != null" >
+        answer_value = #{answerValue,jdbcType=INTEGER},
+      </if>
+      <if test="answerType != null" >
+        answer_type = #{answerType,jdbcType=VARCHAR},
+      </if>
+      <if test="answerDestype != null" >
+        answer_destype = #{answerDestype,jdbcType=VARCHAR},
+      </if>
+      <if test="answerText != null" >
+        answer_text = #{answerText,jdbcType=VARCHAR},
+      </if>
+      <if test="questionId != null" >
+        question_id = #{questionId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where answer_id = #{answerId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mrkj.ygl.entity.questionnaire.QuestionnaireAnswer" >
+    update questionnaire_answer
+    set answer_value = #{answerValue,jdbcType=INTEGER},
+      answer_type = #{answerType,jdbcType=VARCHAR},
+      answer_destype = #{answerDestype,jdbcType=VARCHAR},
+      answer_text = #{answerText,jdbcType=VARCHAR},
+      question_id = #{questionId,jdbcType=VARCHAR}
+    where answer_id = #{answerId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateValueIn" parameterType="java.util.List" >
+    update questionnaire_answer 
+    set answer_value = answer_value+1 where answer_id IN
+    <foreach item="answerId" index="index" collection="list" open="(" separator="," close=")">
+    	#{answerId}
+    </foreach> 
+  </update>
+</mapper>

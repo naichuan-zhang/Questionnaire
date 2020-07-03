@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mrkj.ygl.dao.workday.WorkDayMapper" >
+  <resultMap id="BaseResultMap" type="com.mrkj.ygl.entity.workday.WorkDay" >
+    <id column="work_id" property="workId" jdbcType="VARCHAR" />
+    <result column="work_title" property="workTitle" jdbcType="VARCHAR" />
+    <result column="work_start" property="workStart" jdbcType="DATE" />
+    <result column="work_end" property="workEnd" jdbcType="DATE" />
+    <result column="work_color" property="workColor" jdbcType="VARCHAR" />
+    <result column="work_scope" property="workScope" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    work_id, work_title, work_start, work_end, work_color, work_scope
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from work_day
+    where work_id = #{workId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from work_day
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from work_day
+    where work_id = #{workId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.mrkj.ygl.entity.workday.WorkDay" >
+    insert into work_day (work_id, work_title, work_start, 
+      work_end, work_color, work_scope
+      )
+    values (#{workId,jdbcType=VARCHAR}, #{workTitle,jdbcType=VARCHAR}, #{workStart,jdbcType=DATE}, 
+      #{workEnd,jdbcType=DATE}, #{workColor,jdbcType=VARCHAR}, #{workScope,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mrkj.ygl.entity.workday.WorkDay" >
+    insert into work_day
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="workId != null" >
+        work_id,
+      </if>
+      <if test="workTitle != null" >
+        work_title,
+      </if>
+      <if test="workStart != null" >
+        work_start,
+      </if>
+      <if test="workEnd != null" >
+        work_end,
+      </if>
+      <if test="workColor != null" >
+        work_color,
+      </if>
+      <if test="workScope != null" >
+        work_scope,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="workId != null" >
+        #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="workTitle != null" >
+        #{workTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="workStart != null" >
+        #{workStart,jdbcType=DATE},
+      </if>
+      <if test="workEnd != null" >
+        #{workEnd,jdbcType=DATE},
+      </if>
+      <if test="workColor != null" >
+        #{workColor,jdbcType=VARCHAR},
+      </if>
+      <if test="workScope != null" >
+        #{workScope,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mrkj.ygl.entity.workday.WorkDay" >
+    update work_day
+    <set >
+      <if test="workTitle != null" >
+        work_title = #{workTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="workStart != null" >
+        work_start = #{workStart,jdbcType=DATE},
+      </if>
+      <if test="workEnd != null" >
+        work_end = #{workEnd,jdbcType=DATE},
+      </if>
+      <if test="workColor != null" >
+        work_color = #{workColor,jdbcType=VARCHAR},
+      </if>
+      <if test="workScope != null" >
+        work_scope = #{workScope,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where work_id = #{workId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mrkj.ygl.entity.workday.WorkDay" >
+    update work_day
+    set work_title = #{workTitle,jdbcType=VARCHAR},
+      work_start = #{workStart,jdbcType=DATE},
+      work_end = #{workEnd,jdbcType=DATE},
+      work_color = #{workColor,jdbcType=VARCHAR},
+      work_scope = #{workScope,jdbcType=VARCHAR}
+    where work_id = #{workId,jdbcType=VARCHAR}
+  </update>
+</mapper>
